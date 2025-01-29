@@ -1,0 +1,52 @@
+﻿<Window x:Class="Swop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Swop"
+        mc:Ignorable="d"
+        Title="Swop" Height="450" Width="800" ResizeMode="CanMinimize"
+        Loaded="MainWindow_OnLoaded"
+        Icon="Resources/app.ico">
+    <Window.Style>
+        <Style TargetType="Window" BasedOn="{StaticResource {x:Type Window}}"/>
+    </Window.Style>
+
+    <StackPanel Orientation="Horizontal" Background="#0c0d0d">
+
+        <StackPanel Orientation="Vertical" Width="150" HorizontalAlignment="Left" Background="#1e2022" >
+            <TextBlock HorizontalAlignment="Center" FontSize="20" Margin="4 0 0 0" Foreground="#e8e6e3">Games</TextBlock>
+            <TabControl TabStripPlacement="Left" FontSize="15" HorizontalAlignment="Center" Name="AppsTabControl">
+                <TabControl.Template>
+                    <ControlTemplate TargetType="TabControl">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <ScrollViewer 
+                    HorizontalScrollBarVisibility="Auto"  
+                    VerticalScrollBarVisibility="Auto" 
+                    FlowDirection="LeftToRight">
+                                <TabPanel 
+                        x:Name="HeaderPanel"
+                        IsItemsHost="True"
+                        KeyboardNavigation.TabIndex="1"/>
+                            </ScrollViewer>
+                            <ContentPresenter 
+                    x:Name="PART_SelectedContentHost"
+                    ContentSource="SelectedContent" 
+                    Grid.Column="1"/>
+                        </Grid>
+                    </ControlTemplate>
+
+                </TabControl.Template>
+            </TabControl>
+        </StackPanel>
+
+        <Frame Source="ModsPage.xaml">
+        </Frame>
+    </StackPanel>
+
+</Window>
