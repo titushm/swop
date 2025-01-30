@@ -2,8 +2,8 @@
 A mod manager for the steam workshop
 
 
-# Logo (Will change soon)
-> Logo was made very quickly and it shows.
+# Logo
+> Logo was made by [MrBrose](https://github.com/MrBrose)
 <img src="swop.png" width="350" title="Swop Logo">
 
 # todo list
