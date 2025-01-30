@@ -18,8 +18,12 @@ public partial class MainWindow : Window {
             tabItem.Header = item.Value;
             tabItem.Tag = item.Key;
             AppsTabControl.Items.Add(tabItem);
-
         }
+    }
 
+    private void AppsTabControl_OnSelectionChanged(object sender, SelectionChangedEventArgs e){
+        TabItem selected = (TabItem)AppsTabControl.SelectedItem;
+        ModsPage modsPage = new ModsPage(selected.Tag?.ToString());
+        ContentFrame.NavigationService.Navigate(modsPage);
     }
 }

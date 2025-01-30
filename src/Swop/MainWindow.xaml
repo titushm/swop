@@ -5,18 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Swop"
         mc:Ignorable="d"
-        Title="Swop" Height="450" Width="800" ResizeMode="CanMinimize"
-        Loaded="MainWindow_OnLoaded"
-        Icon="Resources/app.ico">
+        Title="Swop" Height="450" Width="830" ResizeMode="CanMinimize"
+        Loaded="MainWindow_OnLoaded">
     <Window.Style>
         <Style TargetType="Window" BasedOn="{StaticResource {x:Type Window}}"/>
     </Window.Style>
 
-    <StackPanel Orientation="Horizontal" Background="#0c0d0d">
+    <StackPanel Orientation="Horizontal">
 
-        <StackPanel Orientation="Vertical" Width="150" HorizontalAlignment="Left" Background="#1e2022" >
-            <TextBlock HorizontalAlignment="Center" FontSize="20" Margin="4 0 0 0" Foreground="#e8e6e3">Games</TextBlock>
-            <TabControl TabStripPlacement="Left" FontSize="15" HorizontalAlignment="Center" Name="AppsTabControl">
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Background="{DynamicResource SecondaryBack}" MaxWidth="200">
+            <TextBlock FontWeight="Bold" FontSize="25" Background="{DynamicResource SecondaryBack}" Padding="5" HorizontalAlignment="Stretch" Foreground="#e8e6e3">Mod Manager</TextBlock>
+            <TabControl TabStripPlacement="Left" FontSize="15" HorizontalAlignment="Center" Name="AppsTabControl" SelectionChanged="AppsTabControl_OnSelectionChanged">
                 <TabControl.Template>
                     <ControlTemplate TargetType="TabControl">
                         <Grid>
@@ -44,9 +43,10 @@
                 </TabControl.Template>
             </TabControl>
         </StackPanel>
-
-        <Frame Source="ModsPage.xaml">
-        </Frame>
+        <Grid>
+            <Frame Name="ContentFrame" NavigationUIVisibility="Hidden"></Frame>
+            <Frame Name="OverlayFrame" NavigationUIVisibility="Hidden"></Frame>
+        </Grid>
     </StackPanel>
 
 </Window>

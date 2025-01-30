@@ -3,10 +3,12 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:Swop"
+      xmlns:adonisExtensions="clr-namespace:AdonisUI.Extensions;assembly=AdonisUI"
       mc:Ignorable="d"
-      Title="LoadingContentPage" Height="450" Width="800">
-    <Grid>
-        
+      Title="ContentLoadingPage" Height="420" Width="650">
+    <Grid Background="Black" Opacity="0.8">
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <ProgressBar Margin="0 10 0 0" Name="LoadingBar" adonisExtensions:ProgressBarExtension.Content="Loading" Minimum="0" Value="0" Maximum="100" Padding="5, 2" FontSize="20" IsIndeterminate="False"/>
+        </StackPanel>
     </Grid>
 </Page>

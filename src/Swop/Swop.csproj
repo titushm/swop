@@ -17,12 +17,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Resources\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Remove="Resources\app.ico" />
-      <Resource Include="Resources\app.ico" />
+      <Resource Include="Resources\app.ico">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Resource>
     </ItemGroup>
 
 </Project>
