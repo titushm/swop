@@ -16,7 +16,7 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBox Name="NewProfileTextBox" adonisExtensions:WatermarkExtension.Watermark="Enter Profile Name" Width="150" Margin="0 0 10 0" GotFocus="NewProfileTextBox_GotFocus"></TextBox>
                         <Button Margin="0 0 10 0" Name="SaveProfileButton" Click="SaveProfileButton_Click">Save Profile</Button>
-                        <Button Name="ImportProfileButton" Click="ImportProfileButton_Click" Margin="0 0 20 0">Import Profile</Button>
+                        <Button Click="ImportProfileButton_Click" Margin="0 0 20 0">Import Profile</Button>
                     </StackPanel>
 
                 <ListBox Name="ProfilesListBox" SelectedIndex="0" Width="335" Height="310" SelectionChanged="ProfilesListBox_OnSelectionChanged" HorizontalAlignment="Left" FontSize="13" BorderBrush="{DynamicResource PrimaryAccent}" BorderThickness="1" Margin="0 10 0 0">
@@ -28,8 +28,8 @@
         <StackPanel Margin="5 5 0 0">
             <TextBlock FontSize="20" Margin="0 0 0 10" Foreground="{DynamicResource SecondaryTextFore}" FontWeight="Bold">Mods</TextBlock>
             <StackPanel Orientation="Horizontal">
-                <Button Margin="0 0 10 0" Name="OpenModPageButton">Open Mod Page</Button>
-                <Button Name="OpenModFolderButton" Margin="0 0 20 0">Open Mod Folder </Button>
+                <Button Margin="0 0 10 0" Name="OpenModPageButton" Click="OpenModPageButton_OnClick">Open Mod Page</Button>
+                <Button Name="LaunchGameButton" Margin="0 0 20 0" Style="{DynamicResource {x:Static adonisUi:Styles.AccentButton}}" Width="133" Click="LaunchGameButton_OnClick">Launch Game </Button>
             </StackPanel>
             <ListBox Name="ModsListBox" Width="250" Height="310" HorizontalAlignment="Left" FontSize="13" BorderBrush="{DynamicResource PrimaryAccent}" BorderThickness="1" Margin="0 10 0 0">
             </ListBox>

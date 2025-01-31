@@ -11,13 +11,7 @@
             <SolidColorBrush x:Key="PrimaryBack" Color="#0c0d0d"/>
             <SolidColorBrush x:Key="SecondaryBack" Color="#1e2022"/>
             <SolidColorBrush x:Key="PrimaryAccent" Color="#3d3d4c"/>
-            <ControlTemplate x:Key="ToggleSwitch" TargetType="ToggleButton">
-                    <ToggleButton Content="{TemplateBinding Content}" 
-                                  HorizontalAlignment="Right"
-                                  BorderThickness="1"
-                                  BorderBrush="#7B9BAF"
-                                  Style="{DynamicResource {x:Static adonisUi:Styles.ToggleSwitch}}"/>
-            </ControlTemplate>
+            <Style x:Key="ToggleSwitch" TargetType="ToggleButton" BasedOn="{StaticResource {x:Static adonisUi:Styles.ToggleSwitch}}"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/AdonisUI;component/ColorSchemes/dark.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/AdonisUI.ClassicTheme;component/Resources.xaml"/>

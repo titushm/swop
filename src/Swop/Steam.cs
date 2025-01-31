@@ -1,17 +1,17 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics;
 using HtmlAgilityPack;
-using Newtonsoft.Json.Linq;
 
 namespace Swop;
-using System.Net.Http;
 
 
 
 public static class Steam {
-        private static readonly HttpClient HttpClient = new HttpClient();
         public static readonly string StoreUrl = "https://store.steampowered.com/app/";
         public static readonly string FileDetailsUrl = "https://steamcommunity.com/sharedfiles/filedetails/?id=";
 
+        public static void OpenSteamLink(string link){
+                Process.Start(new ProcessStartInfo(link) { UseShellExecute = true });
+        }
         public static string? GetGameName(string id){
                 HtmlWeb web = new HtmlWeb();
                 HtmlDocument document = web.Load(StoreUrl + id);
@@ -22,13 +22,20 @@ public static class Steam {
                         .Replace("/", "") ?? null;
         }
         
-        public static string? GetModName(string id){
-                Dictionary<string, string> modCache = Utils.GetModCache();
+        public static async Task<string?> GetModName(string id, bool instantCache = false){
+                Dictionary<string, string> modCache = await Utils.GetModCache();
                 if (modCache.TryGetValue(id, out var name)) return name;
                 HtmlWeb web = new HtmlWeb();
                 HtmlDocument document = web.Load(FileDetailsUrl + id);
                 HtmlNode metaTag = document.DocumentNode.SelectSingleNode("//meta[@property='og:title']");
                 string title = metaTag?.GetAttributeValue("content", string.Empty) ?? "";
-                return title.Replace("Steam Workshop::", "").Replace("&quot;", "");
+                title = title.Replace("Steam Workshop::", "").Replace("&quot;", "");
+                if (title == "Steam Community :: Error") return null;
+                if (instantCache){
+                        Dictionary<string, string> mod = new();
+                        mod[id] = title; 
+                        await Utils.CacheMod(mod);
+                }
+                return title;
         }
 }

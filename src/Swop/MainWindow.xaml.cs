@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Net.Http;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Swop;
@@ -11,7 +13,10 @@ public partial class MainWindow : Window {
         InitializeComponent();
     }
 
+    
     private void MainWindow_OnLoaded(object sender, RoutedEventArgs e){
+        VersionTextBlock.Text = Utils.VERSION.ToString();
+        Utils.CheckUpdate();
         Dictionary<string, string> apps = Workshop.GetWorkshopAppIDs();
         foreach (KeyValuePair<string, string> item in apps) {
             TabItem tabItem = new TabItem();

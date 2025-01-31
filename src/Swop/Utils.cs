@@ -1,11 +1,17 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
+using System.Net.Http;
 using System.Windows.Controls;
+using AdonisUI.Controls;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Swop;
 
 public static class Utils{
+    public static Version VERSION = new(0, 5, 0);
+    public static string REPO_URL = "https://github.com/titushm/swop";
+    public static HttpClient HttpClient = new();
     public static class Paths {
         public static readonly string DataFolder =
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\titushm\\Swop\\";
@@ -13,9 +19,36 @@ public static class Utils{
         public static readonly string ProfilesDir = $"{DataFolder}\\profiles\\";
         public static readonly string ConfigFile = $"{DataFolder}\\config.json";
         public static readonly string ModCacheFile = $"{DataFolder}\\mod_name_cache.json";
+        public static readonly string DisabledModsDir = $"{DataFolder}\\disabled\\";
     }
-    private static readonly object FileLock = new();
-
+    
+        
+    public static async void CheckUpdate() {
+        await Task.Run(() => {
+            try {
+                Task<HttpResponseMessage> response = HttpClient.GetAsync(REPO_URL + "/releases/latest");
+                string redirectUrl = response.Result.RequestMessage.RequestUri.ToString();
+                Version latestVersion = Version.Parse(redirectUrl.Split('/').Last());
+                if (latestVersion > VERSION) {
+                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate {
+                        MessageBoxResult updateMessageResult = MessageBox.Show(
+                            $"Update available: {latestVersion}\nWould you like to go to the github repo to update",
+                            "Swop", MessageBoxButton.YesNo);
+                        if (updateMessageResult == MessageBoxResult.Yes) {
+                            Process.Start(new ProcessStartInfo {
+                                FileName = REPO_URL + "/releases/latest",
+                                UseShellExecute = true
+                            });
+                        }
+                    });
+                }
+            }
+            catch{
+                // ignored
+            }
+        });
+    }
+    
     public static bool EnsureProfileOverwrite(string profileName, ItemCollection items){
         bool canceled = false;
         foreach (ListBoxItem item in items){
@@ -27,13 +60,13 @@ public static class Utils{
         }
         return canceled;
     }
-    public static void ClearLogFile(){
-        ValidatePaths();
-        File.WriteAllText(Paths.LogFile, "");
-        Log("Log file cleared");
+    public static async void ClearLogFile(){
+        await ValidatePaths();
+        await File.WriteAllTextAsync(Paths.LogFile, "");
+        await Log("Log file cleared");
     }
 
-    private static void EnsurePath(string path){
+    public static async Task EnsurePath(string path){
         bool isFile = path.Contains(".");
         if (isFile && !File.Exists(path)) {
             File.Create(path);
@@ -42,133 +75,140 @@ public static class Utils{
         }
     }
     
-    public static void ValidatePaths(){
-        EnsurePath(Paths.DataFolder);
-        EnsurePath(Paths.LogFile);
-        EnsurePath(Paths.ProfilesDir);
-        EnsurePath(Paths.ModCacheFile);
+    public static async Task ValidatePaths(){
+        await EnsurePath(Paths.DataFolder);
+        await EnsurePath(Paths.LogFile);
+        await EnsurePath(Paths.ProfilesDir);
     }
     
-    public static void Log(string text){
-        ValidatePaths();
+    public static async Task Log(string text){
+        await ValidatePaths();
         try {
             string timeStamp = DateTime.Now.ToString("HH:mm:ss");
             StreamWriter logWriter = File.AppendText(Paths.LogFile);
-            logWriter.Write($"[{timeStamp}] {text}\n");
+            await logWriter.WriteAsync($"[{timeStamp}] {text}\n");
             logWriter.Close();
         }
         catch{
             // ignored
         }
     }
-    public static Dictionary<string, string> GetModCache(){
-        ValidatePaths();
+    public static async Task<Dictionary<string, string>> GetModCache(){
+        await ValidatePaths();
+        await EnsurePath(Paths.ModCacheFile);
         Dictionary<string, string>? cache;
-        lock (FileLock){
-            string jsonString = File.ReadAllText(Paths.ModCacheFile);
-            cache = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonString);
-        }
+        string jsonString = File.ReadAllText(Paths.ModCacheFile);
+        cache = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonString);
         return cache ?? new Dictionary<string, string>();
     }
     
-    public static void CacheMods(Dictionary<string, string> modNames){
-        ValidatePaths();
-        lock (FileLock){
-            Dictionary<string, string> cache = GetModCache();
-            foreach (KeyValuePair<string,string> mod in modNames){
-                cache[mod.Key] = mod.Value;
-            }
-            string jsonString = JsonConvert.SerializeObject(cache);
-            File.WriteAllText(Paths.ModCacheFile, jsonString);
+    public static async Task CacheMod(Dictionary<string, string> mods){
+        await ValidatePaths();
+        Dictionary<string, string> cache = await GetModCache();
+        foreach (KeyValuePair<string,string> mod in mods){
+            cache[mod.Key] = mod.Value;
         }
+        string jsonString = JsonConvert.SerializeObject(cache);
+        await File.WriteAllTextAsync(Paths.ModCacheFile, jsonString);
     }
     
-    public static T? GetConfigProperty<T>(string propertyName) {
-        ValidatePaths();
-        string jsonString = File.ReadAllText(Paths.ConfigFile);
+    public static async Task<T?> GetConfigProperty<T>(string propertyName) {
+        await ValidatePaths();
+        if (!File.Exists(Paths.ConfigFile)) await File.WriteAllTextAsync(Paths.ConfigFile, "{}");
+        string jsonString = await File.ReadAllTextAsync(Paths.ConfigFile);
         JObject? jsonObject = JsonConvert.DeserializeObject<JObject>(jsonString);
         if (jsonObject != null && jsonObject.ContainsKey(propertyName)) {
             return jsonObject[propertyName]!.ToObject<T>();
         }
-
         return default;
     }
-
-    public static void SetConfigProperty(string propertyName, JToken value) {
-        ValidatePaths(); 
-        string jsonString = File.ReadAllText(Paths.ConfigFile);
+    
+    public static async Task SetConfigProperty(string propertyName, JToken value) {
+        await ValidatePaths();
+        if (!File.Exists(Paths.ConfigFile)) await File.WriteAllTextAsync(Paths.ConfigFile, "{}");
+        string jsonString = await File.ReadAllTextAsync(Paths.ConfigFile);
         JObject? jsonObject = JsonConvert.DeserializeObject<JObject>(jsonString);
         if (jsonObject != null && jsonObject.ContainsKey(propertyName)) {
             jsonObject.Property(propertyName)?.Remove();
         }
-
+    
         jsonObject?.Add(propertyName, value);
         jsonString = JsonConvert.SerializeObject(jsonObject);
         File.WriteAllText(Paths.ConfigFile, jsonString);
     }
     
-    public static void DeleteProfile(string profileName){
-        ValidatePaths();
-        string profilePath = Paths.ProfilesDir + profileName + ".json";
+    public static async Task DeleteProfile(string gameID, string profileName) {
+        await ValidatePaths();
+        string profilePath = $"{Paths.ProfilesDir}\\{gameID}\\{profileName}.json";
+        await EnsurePath(profilePath);
         if (!File.Exists(profilePath)) return;
-        lock (FileLock) {
-            File.Delete(profilePath);
-        }
-        File.Delete(profilePath);
+            try {
+                File.Delete(profilePath);
+            } catch (Exception ex) {
+                await Log(ex.ToString());
+            }
     }
-    
-    public static JObject? GetProfileJson(string profileName){
-        JObject? jsonObject;
-        lock (FileLock) {
-            ValidatePaths();
-            string profilePath = Paths.ProfilesDir + profileName + ".json";
-            if (!File.Exists(profilePath)) return null;
-            string jsonString = File.ReadAllText(profilePath);
-            jsonObject = JsonConvert.DeserializeObject<JObject>(jsonString);
+
+    public static async Task<JObject?> GetProfileJson(string gameID, string profileName) {
+        await ValidatePaths();
+        string profilePath = $"{Paths.ProfilesDir}\\{gameID}\\{profileName}.json";
+        await EnsurePath(profilePath);
+        if (!File.Exists(profilePath)) return null;
+
+        try {
+            string jsonString = await File.ReadAllTextAsync(profilePath);
+            return JsonConvert.DeserializeObject<JObject>(jsonString);
+        } catch (Exception ex){
+            await Log(ex.ToString());
+            return null;
         }
-        return jsonObject;
     }
-    
-    public static void WriteProfileJson(string profileName, object obj){
-        ValidatePaths();
-        lock (FileLock){
-            string profilePath = Paths.ProfilesDir + profileName + ".json";
+
+    public static async Task WriteProfileJson(string gameID, string profileName, object obj)
+    {
+        await ValidatePaths();
+        string profilePath = $"{Paths.ProfilesDir}\\{gameID}\\{profileName}.json";
+        try {
             string jsonString = JsonConvert.SerializeObject(obj);
-            File.WriteAllText(profilePath, jsonString);
+            await File.WriteAllTextAsync(profilePath, jsonString);
+        } catch (Exception ex) {
+            await Log(ex.ToString());
         }
     }
-    
-    public static Dictionary<string, JObject> GetProfiles(){
-        ValidatePaths();
+
+    public static async Task<Dictionary<string, JObject>> GetProfiles(string gameID) {
+        await ValidatePaths();
         Dictionary<string, JObject> profiles = new();
-        lock (FileLock){
-            string[] profilePaths = Directory.GetFiles(Paths.ProfilesDir, "*.json", SearchOption.TopDirectoryOnly);
-            foreach (string path in profilePaths){
-                string profileName = path.Split(Paths.ProfilesDir)[1].Replace(".json", "");
-                JObject? profileJson = GetProfileJson(profileName);
-                if (profileJson == null) continue;
+        string profilesPath = $"{Paths.ProfilesDir}\\{gameID}";
+        await EnsurePath(profilesPath);
+        string[] profilePaths = Directory.GetFiles(profilesPath, "*.json", SearchOption.TopDirectoryOnly);
+
+        foreach (string path in profilePaths) {
+            string profileName = Path.GetFileNameWithoutExtension(path);
+            JObject? profileJson = await GetProfileJson(gameID, profileName);
+            if (profileJson != null) {
                 profiles[profileName] = profileJson;
             }
         }
         return profiles;
     }
 
-    public static bool EnsureProfile(string path){
+    public static bool IsValidProfile(string path) {
         if (!File.Exists(path)) return false;
-        string jsonString = File.ReadAllText(path);
-        JObject? jsonObject = JsonConvert.DeserializeObject<JObject>(jsonString);
-        bool isValid = true;
-        if (jsonObject != null){
-            foreach (KeyValuePair<string, JToken?> item in jsonObject){
-                try{  item.Value?.ToObject<bool>(); } catch{ isValid = false;}
 
-                if (!isValid || item.Key.GetType() != typeof(String) || item.Value.ToObject<bool>().GetType() != typeof(Boolean)){
-                    isValid = false;
-                    break;
+        try {
+                string jsonString = File.ReadAllText(path);
+                JObject? jsonObject = JsonConvert.DeserializeObject<JObject>(jsonString);
+                if (jsonObject != null) {
+                    foreach (KeyValuePair<string, JToken?> item in jsonObject) {
+                        if (item.Key.GetType() != typeof(string) || item.Value?.Type != JTokenType.Boolean) {
+                            return false;
+                        }
+                    }
                 }
-            }
+        } catch (Exception) {
+            return false;
         }
-        if (isValid) return true;
-        return false;
+        return true;
     }
 }
