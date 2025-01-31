@@ -14,7 +14,7 @@
     <StackPanel Orientation="Horizontal">
 
         <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Background="{DynamicResource SecondaryBack}" MaxWidth="200">
-            <TextBlock FontWeight="Bold" Name="VersionTextBlock" FontSize="15" Background="{DynamicResource SecondaryBack}" Padding="5" HorizontalAlignment="Stretch" Foreground="#e8e6e3"></TextBlock>
+            <TextBlock Name="VersionTextBlock" FontWeight="Thin" FontSize="15"  Padding="5" HorizontalAlignment="Stretch" Foreground="{DynamicResource SecondaryTextFore}"></TextBlock>
             <TabControl TabStripPlacement="Left" FontSize="15" HorizontalAlignment="Center" Name="AppsTabControl" SelectionChanged="AppsTabControl_OnSelectionChanged">
                 <TabControl.Template>
                     <ControlTemplate TargetType="TabControl">

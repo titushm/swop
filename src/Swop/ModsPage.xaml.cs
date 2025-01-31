@@ -184,6 +184,7 @@ namespace Swop
             await PopulateProfiles();
             
             string disabledModsPath = Utils.Paths.DisabledModsDir + GameID + "\\";
+            if (!Directory.Exists(disabledModsPath)) Directory.CreateDirectory(disabledModsPath);
             string[] disabledMods = Directory.GetDirectories(disabledModsPath, "*", SearchOption.TopDirectoryOnly);
             foreach (var path in disabledMods){
                 string folderName = Path.GetFileName(path);

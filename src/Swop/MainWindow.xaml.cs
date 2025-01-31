@@ -15,7 +15,7 @@ public partial class MainWindow : Window {
 
     
     private void MainWindow_OnLoaded(object sender, RoutedEventArgs e){
-        VersionTextBlock.Text = Utils.VERSION.ToString();
+        VersionTextBlock.Text = "Version: " + Utils.VERSION.ToString();
         Utils.CheckUpdate();
         Dictionary<string, string> apps = Workshop.GetWorkshopAppIDs();
         foreach (KeyValuePair<string, string> item in apps) {

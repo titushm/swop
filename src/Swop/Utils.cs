@@ -61,8 +61,10 @@ public static class Utils{
         return canceled;
     }
     public static async void ClearLogFile(){
+        try{
+            File.Delete(Paths.LogFile);
+        } catch {}
         await ValidatePaths();
-        await File.WriteAllTextAsync(Paths.LogFile, "");
         await Log("Log file cleared");
     }
 

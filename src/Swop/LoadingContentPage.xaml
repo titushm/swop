@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:adonisExtensions="clr-namespace:AdonisUI.Extensions;assembly=AdonisUI"
       mc:Ignorable="d"
-      Title="ContentLoadingPage" Height="420" Width="650">
+      Title="ContentLoadingPage" Height="420" Width="680">
     <Grid Background="Black" Opacity="0.8">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
             <ProgressBar Margin="0 10 0 0" Name="LoadingBar" adonisExtensions:ProgressBarExtension.Content="Loading" Minimum="0" Value="0" Maximum="100" Padding="5, 2" FontSize="20" IsIndeterminate="False"/>
