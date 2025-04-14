@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,7 +13,6 @@ public partial class MainWindow : Window {
     public MainWindow() {
         InitializeComponent();
     }
-
     
     private void MainWindow_OnLoaded(object sender, RoutedEventArgs e){
         VersionTextBlock.Text = "Version: " + Utils.VERSION.ToString();
