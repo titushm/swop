@@ -1,16 +1,15 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 
 namespace Swop;
 
-public partial class ContentErrorPage : Page{
-    private string errorMessage;
-    public ContentErrorPage(string message){
-        errorMessage = message;
-        InitializeComponent();
-    }
+public partial class ContentErrorPage {
+	private readonly string _errorMessage;
+	public ContentErrorPage(string message){
+		_errorMessage = message;
+		InitializeComponent();
+	}
 
-    private void ContentErrorPage_OnLoaded(object sender, RoutedEventArgs e){
-        ErrorMessageTextBlock.Text = errorMessage;
-    }
+	private void ContentErrorPage_OnLoaded(object sender, RoutedEventArgs e){
+		ErrorMessageTextBlock.Text = _errorMessage;
+	}
 }

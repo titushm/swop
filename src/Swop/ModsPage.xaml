@@ -1,39 +1,42 @@
 ﻿<Page x:Class="Swop.ModsPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:adonisExtensions="clr-namespace:AdonisUI.Extensions;assembly=AdonisUI"
-      xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
-      mc:Ignorable="d"
-      Loaded="ModsPage_OnLoaded"
-      d:DesignHeight="450" d:DesignWidth="680"
-      Title="ModsPage">
-    <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
-            <StackPanel Margin="5 5 0 0">
-                <TextBlock FontSize="20" Margin="0 0 0 10" Foreground="{DynamicResource SecondaryTextFore}" FontWeight="Bold">Profiles</TextBlock>
-                <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBox Name="NewProfileTextBox" adonisExtensions:WatermarkExtension.Watermark="Enter Profile Name" Width="150" Margin="0 0 10 0" GotFocus="NewProfileTextBox_GotFocus"></TextBox>
-                        <Button Margin="0 0 10 0" Name="SaveProfileButton" Click="SaveProfileButton_Click">Save Profile</Button>
-                        <Button Click="ImportProfileButton_Click" Margin="0 0 20 0">Import Profile</Button>
-                    </StackPanel>
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:adonisExtensions="clr-namespace:AdonisUI.Extensions;assembly=AdonisUI"
+	xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
+	mc:Ignorable="d"
+	Loaded="ModsPage_OnLoaded"
+	d:DesignHeight="410" d:DesignWidth="580"
+	Title="ModsPage">
 
-                <ListBox Name="ProfilesListBox" SelectedIndex="0" Width="335" Height="310" SelectionChanged="ProfilesListBox_OnSelectionChanged" HorizontalAlignment="Left" FontSize="13" BorderBrush="{DynamicResource PrimaryAccent}" BorderThickness="1" Margin="0 10 0 0">
-                </ListBox>
-            </StackPanel>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
 
-        </StackPanel>
+		<StackPanel Grid.Column="1" Margin="15,5,0,0">
+			<TextBlock FontSize="20" Margin="0 0 0 10" Foreground="{DynamicResource SecondaryTextFore}" FontWeight="Bold">Profiles</TextBlock>
+			<StackPanel Orientation="Vertical">
+				<StackPanel Orientation="Horizontal">
+					<TextBox Name="NewProfileTextBox" adonisExtensions:WatermarkExtension.Watermark="Enter Profile Name" Width="150" Margin="0 0 10 0" GotFocus="NewProfileTextBox_GotFocus" TextChanged="NewProfileTextBox_OnTextChanged"/>
+					<Button Margin="0 0 10 0" Name="SaveProfileButton" Click="SaveProfileButton_Click" IsEnabled="False">Save Profile</Button>
+					<Button Click="ImportProfileButton_Click" Margin="0 0 20 0">Import Profile</Button>
+				</StackPanel>
 
-        <StackPanel Margin="5 5 0 0">
-            <TextBlock FontSize="20" Margin="0 0 0 10" Foreground="{DynamicResource SecondaryTextFore}" FontWeight="Bold">Mods</TextBlock>
-            <StackPanel Orientation="Horizontal">
-                <Button Margin="0 0 10 0" Name="OpenModPageButton" Click="OpenModPageButton_OnClick">Open Mod Page</Button>
-                <Button Name="LaunchGameButton" Margin="0 0 20 0" Style="{DynamicResource {x:Static adonisUi:Styles.AccentButton}}" Width="133" Click="LaunchGameButton_OnClick">Launch Game </Button>
-            </StackPanel>
-            <ListBox Name="ModsListBox" Width="250" Height="310" HorizontalAlignment="Left" FontSize="13" BorderBrush="{DynamicResource PrimaryAccent}" BorderThickness="1" Margin="0 10 0 0">
-            </ListBox>
-        </StackPanel>
-    </StackPanel>
+				<ListBox Name="ProfilesListBox" SelectedIndex="0" Width="335" Height="310" SelectionChanged="ProfilesListBox_OnSelectionChanged" HorizontalAlignment="Left" FontSize="13" BorderBrush="{DynamicResource PrimaryAccent}" BorderThickness="1" Margin="0 10 0 0"/>
+			</StackPanel>
+		</StackPanel>
+
+		<StackPanel Grid.Column="2" Margin="15,5,15,0">
+			<TextBlock FontSize="20" Margin="0 0 0 10" Foreground="{DynamicResource SecondaryTextFore}" FontWeight="Bold">Mods</TextBlock>
+			<StackPanel Orientation="Horizontal">
+				<Button Margin="0 0 10 0" Name="OpenModPageButton" Click="OpenModPageButton_OnClick" IsEnabled="False">Open Mod Page</Button>
+				<Button Name="LaunchGameButton" Margin="0 0 20 0" Style="{DynamicResource {x:Static adonisUi:Styles.AccentButton}}" Width="133" Click="LaunchGameButton_OnClick">Launch Game</Button>
+			</StackPanel>
+			<ListBox Name="ModsListBox" Width="250" Height="310" HorizontalAlignment="Left" FontSize="13" BorderBrush="{DynamicResource PrimaryAccent}" BorderThickness="1" Margin="0 10 0 0" SelectionChanged="ModsListBox_OnSelectionChanged"/>
+		</StackPanel>
+	</Grid>
 </Page>
-
